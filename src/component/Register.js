@@ -5,7 +5,14 @@ render(){
 return(
 <div>
 <Link to="/">Nav</Link>
-  <h1>jhgjhghjg</h1>
+
+
+
+
+
+
+
+  <h1>Welcome to React application</h1>
 </div>
 
 )
