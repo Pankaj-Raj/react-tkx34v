@@ -48,8 +48,25 @@ handelChange=e=>{
   formObj={
     ...form,[name]:value
   }
+  this.setState({form:formObj});
+
 }
 
+validateNumber=e=>{
+  var ev=e||window.event;
+  if(ev.type=="paste"){
+key=ev.clipboardData.getData("text/plain");
+  }else{
+    var key=ev.keyCode||ev.which;
+    key = String.fromCharCode(key);
+    
+  }
+  var regex = /[0-9]|\./;
+  if (!regex.test(key)) {
+    ev.returnValue = false;
+    if (ev.preventDefault) ev.preventDefault();
+  }
+}
 
 render(){
   const {form,formErrors} =this.state;
@@ -60,18 +77,41 @@ return(
           <p className="title">Sign up</p>
 
           <div className="row">
-            <div className="col-md-6">
+            <div className="col-md-12">
               <div className="form-group">
                 <label>
                 Name:<span className="asterisk">*</span>
-                <input type="text" className="form-control" name="name" value="form.name" OnChange={this.handelChange} blur={this.handelChange}/>
+                </label>
+                <input type="text" className="form-control" name="name" placeholder="Name" value={form.name} onChange={this.handelChange} blur={this.handelChange}/>
                 {
                   formErrors.name &&(
                   <span className="err">{formErrors.name}</span>
                   )
                 }
-                </label>
+              
               </div>
+
+              <div className="form-group">
+                <label >
+                  Email: <span className="asterisk">*</span>
+                </label>
+                <input type="text" className="form-control" placeholder="Email" name="email" value={form.email} onChange={this.handelChange} blur={this.handelChange} />
+                {formErrors.email&&(<span className="err">{formErrors.email}</span>)}
+              </div>
+
+              <div className="form-group">
+<label htmlFor="">
+  Mobile: <span className="asterisk">*</span>
+</label>
+<input type="text" name="mobile" className="form-control" placeholder="Mobile" value={form.mobile} onChange={this.handelChange} blur={this.handelChange} onKeyPress={this.validateNumber}/>
+{
+  formErrors.mobile&&( <span>{formErrors.mobile}</span>)
+}
+              </div>
+
+
+
+
             </div>
           </div>
 </div>
