@@ -45,11 +45,25 @@ export default class Register extends React.Component {
     const { name, value, checked } = e.target;
     const { form, formErrors } = this.state;
     let formObj = {};
+    if (name === "language") {
+      // handle the change event of language field
+      if (checked) {
+        // push selected value in list
+        formObj = { ...form };
+        formObj[name].push(value);
+      } else {
+        // remove unchecked value from the list
+        formObj = {
+          ...form,
+          [name]: form[name].filter(x => x !== value)
+        };
+      }
+    } else {
     formObj = {
       ...form, [name]: value
     }
     this.setState({ form: formObj });
-
+  }
   }
 
   validateNumber = e => {
@@ -66,6 +80,11 @@ export default class Register extends React.Component {
       ev.returnValue = false;
       if (ev.preventDefault) ev.preventDefault();
     }
+  }
+
+
+  preventDropdown = event => {
+    event.stopPropagation();
   }
 
   render() {
@@ -126,21 +145,29 @@ export default class Register extends React.Component {
                 {formErrors.confirmPassword && (<span className="err">{formErrors.confirmPassword}</span>)}
               </div>
 
-<div className="form-group">
-  <label htmlFor="" className="mr-3">
-    Language : <span className="asterisk">*</span>
-  </label>
-  <div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Dropdown button
-  </button>
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    <a class="dropdown-item" href="#">Action</a>
-    <a class="dropdown-item" href="#">Another action</a>
-    <a class="dropdown-item" href="#">Something else here</a>
-  </div>
-</div>
-</div>
+              <div className="form-group">
+                <label htmlFor="" className="mr-3">
+                  Language : <span className="asterisk">*</span>
+                </label>
+                <div class="dropdown">
+                  <input class="form-control dropdown-toggle" type="text" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" />
+
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" onClick={this.preventDropdown}>
+                    {
+                      this.languageList.map((x, i) => {
+                        return (                        
+                        <label key={i}>
+                          <input type="checkbox" name="language" className="dropdown-item" value={x.value} onChange={this.handelChange} checked={form.language.includes(x.value)} />{" "}   {x.label}<br/>{form.language.includes(x.value)}
+                        </label>
+
+                        )
+                      })
+                    }
+                  </div>
+                </div>
+
+                {formErrors.language && (<span>{formErrors.language}</span>)}
+              </div>
 
 
             </div>
